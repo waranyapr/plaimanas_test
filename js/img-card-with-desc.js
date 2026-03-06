@@ -21,33 +21,38 @@ const cards = [
   },
 ];
 
+const isMobile = window.innerWidth <= 768;
+
 document.getElementById("img-card-desc-container").innerHTML = `
   <div class="img-card-desc-wrapper">
     ${cards
-      .map(
-        (card) => `
-      <div class="img-card">
-        <div class="img-wrapper">
-          <div class="hero-img">
-            <h1 class="hero-img-title-desc">${card.hero}</h1>
+      .map((card) => {
+        const currentWidth = isMobile ? card.mobileWidth : card.width;
+        const currentHeight = isMobile ? card.mobileHeight : card.height;
+
+        return `
+          <div class="img-card">
+            <div class="img-wrapper">
+              <div class="hero-img">
+                <h1 class="hero-img-title-desc">${card.hero}</h1>
+              </div>
+              ${
+                card.video
+                  ? `
+                <video style="width: ${currentWidth}; height: ${currentHeight};" autoplay muted loop playsinline>
+                  <source src="${card.video}" type="video/mp4">
+                </video>
+              `
+                  : `
+                <img src="${card.image}" class="image" style="width: ${currentWidth}; height: ${currentHeight}; object-fit: cover;">
+              `
+              }
+            </div>
+            <h1 class="title ${card.video ? "" : "mt-5"}">${card.title}</h1>
+            <p class="desc">${card.desc}</p>
           </div>
-          ${
-            card.video
-              ? `
-          <video style="width: min(${card.width}, ${card.mobileWidth}); height: min(${card.height}, ${card.mobileHeight});" autoplay muted loop playsinline>
-            <source src="${card.video}" type="video/mp4">
-          </video>
-        `
-              : `
-          <img src="${card.image}" class="image" style="width: min(${card.width}, ${card.mobileWidth}); height: min(${card.height}, ${card.mobileHeight}); object-fit: cover;">
-  `
-          }
-        </div>
-        <h1 class="title ${card.video ? "" : "mt-5"}">${card.title}</h1>
-        <p class="desc">${card.desc}</p>
-      </div>
-    `,
-      )
+        `;
+      })
       .join("")}
   </div>
 `;
